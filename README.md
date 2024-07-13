@@ -19,6 +19,10 @@ python train_toy.py
 ```
 We have only released the training code for toy data so far. More implementations for image datasets are still being prepared. Stay tuned.
 
+## Acknowledgements
+- [DDGAN](https://github.com/NVlabs/denoising-diffusion-gan)
+- [score_sde](https://github.com/yang-song/score_sde_pytorch)
+
 ## BibTeX
 ```
 @article{geng2024improving,
