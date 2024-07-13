@@ -14,7 +14,7 @@ Run the following to install a Python environment:
 ```
 conda env create -f environment.yml
 ```
-This .yml file may be a little bit messy, but it has been verified to work  across different devices.
+This .yml file might be a bit cluttered, but it has been verified to work  across different devices.
 
 ## Set up datasets
 Following [DDGAN](https://arxiv.org/pdf/2112.07804), for large datasets, we store the data in LMDB datasets for I/O efficiency. Check [here](https://github.com/NVlabs/NVAE#set-up-file-paths-and-data) for information regarding dataset preparation.
