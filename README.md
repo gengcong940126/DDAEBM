@@ -18,3 +18,13 @@ The training code is still preparing and will be coming soon!
 ```
 python train_toy.py
 ```
+
+## BibTeX
+```
+@article{geng2024improving,
+  title={Improving Adversarial Energy-Based Model via Diffusion Process},
+  author={Geng, Cong and Han, Tian and Jiang, Peng-Tao and Zhang, Hao and Chen, Jinwei and Hauberg, S{\o}ren and Li, Bo},
+  journal={International Conference on Machine Learning},
+  year={2024}
+}
+```
