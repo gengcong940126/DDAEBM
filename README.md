@@ -22,7 +22,7 @@ Following [DDGAN](https://arxiv.org/pdf/2112.07804), for large datasets, we stor
 ## Training DDAEBM
 
 ```
-python train_toy.py
+python train.py
 ```
 We have only released the training code for toy data so far. More implementations for image datasets are still being prepared. Stay tuned.
 
