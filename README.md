@@ -1,5 +1,6 @@
 # Improving Adversarial Energy-Based Model via Diffusion Process
 Pytorch implementation of the paper [Improving Adversarial Energy-Based Model via Diffusion Process](https://arxiv.org/pdf/2403.01666)
+
 by [Cong Geng](https://gengcong940126.github.io), [Tian Han](https://thanacademic.github.io), [Pengtao Jiang](https://pengtaojiang.github.io), Hao Zhang, Jinwei Chen, [Søren Hauberg](https://www2.compute.dtu.dk/~sohau), and [Bo Li](https://libraboli.github.io).
 ## Requirements
 Run the following to install a Python environment:
