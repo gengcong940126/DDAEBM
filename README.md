@@ -39,7 +39,7 @@ including the CIFAR-10 (32x32), CelebA (64x64), and LSUN (128x128) datasets, as 
 ```
 python train/train_image.py
 ```
-Code for image datasets is still being prepared and is not yet fully complete, with some minor details pending. However, you can still refer to the current implementation.
+Code for image datasets is still being prepared and not yet fully complete. However, you can still refer to the current implementation.
 
 ## Acknowledgements
 - [DDGAN](https://github.com/NVlabs/denoising-diffusion-gan)
