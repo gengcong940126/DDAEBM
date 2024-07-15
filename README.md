@@ -13,6 +13,7 @@ and introduce a variational posterior distribution for the generator’s trainin
 <p align="center">
 <img align="middle" src="./assets/img_diffusion.png" width="600" />
 </p>
+
 ## Requirements
 Run the following to install a Python environment:
 ```
