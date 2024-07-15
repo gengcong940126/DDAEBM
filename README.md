@@ -10,7 +10,9 @@ being difficult to train. Adversarial EBMs introduce a generator to form a minim
 still exists. Inspired by diffusion-based models, we embedded EBMs into each denoising step to split a long-generated process into several smaller steps. Besides, we employ a symmetric Jeffrey divergence
 and introduce a variational posterior distribution for the generator’s training to address the main challenges that exist in adversarial EBMs. We simply refer to our method as **D**enoising **D**iffusion **A**dversarial **E**nergy-**B**ased **M**odel (**DDAEBM**).
 
-![schematic](assets/img_diffusion.png)
+<p align="center">
+<img align="middle" src="./assets/img_diffusion.png" width="600" />
+</p>
 ## Requirements
 Run the following to install a Python environment:
 ```
