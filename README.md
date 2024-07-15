@@ -27,6 +27,9 @@ Following [DDGAN](https://arxiv.org/pdf/2112.07804), for large datasets, we stor
 ```
 python train/train_toy.py
 ```
+<p align="left">
+<img align="middle" src="./assets/img_toy.png" width="300" />
+</p>
 
 ### Image data
 Image data includes datasets of CIFAR-10 32, CelebA 64, LSUN 128, or your own datasets.
