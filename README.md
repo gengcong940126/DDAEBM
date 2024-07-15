@@ -23,10 +23,17 @@ Following [DDGAN](https://arxiv.org/pdf/2112.07804), for large datasets, we stor
 
 ## Training DDAEBM
 
+### Toy data
 ```
-python train.py
+python train/train_toy.py
 ```
-We have only released the training code for toy data so far. More implementations for image datasets are still being prepared. Stay tuned.
+
+### Image data
+
+```
+python train/train_image.py
+```
+Code for image datasets are still being prepared and have not been completed with some minor details. You can still refer to this current implementation. 
 
 ## Acknowledgements
 - [DDGAN](https://github.com/NVlabs/denoising-diffusion-gan)
