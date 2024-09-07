@@ -589,7 +589,7 @@ if __name__ == '__main__':
     # geenrator and training
     parser.add_argument('--exp', default='experiment_image', help='name of experiment')
     parser.add_argument('--resume_path', default='', help='name of experiment')
-    parser.add_argument('--dataset', default='lsun128', help='name of dataset')
+    parser.add_argument('--dataset', default='cifar10', choices=['cifar10', 'celeba64', 'lsun128'], help='name of dataset')
     parser.add_argument('--nz', type=int, default=100)
     parser.add_argument('--num_timesteps', type=int, default=4)
 

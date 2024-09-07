@@ -37,6 +37,7 @@ python train/train_toy.py
 ### Image data
 including the CIFAR-10 (32x32), CelebA (64x64), and LSUN (128x128) datasets, as well as the option to use your own custom datasets.
 ```
+export CUDA_VISIBLE_DEVICES=<gpu ranks>
 export PYTHONPATH=./
 python train/train_image.py --dataset=<dataset> --num_process_per_node=<num_gpus>
 ```
