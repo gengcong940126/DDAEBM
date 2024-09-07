@@ -37,9 +37,11 @@ python train/train_toy.py
 ### Image data
 including the CIFAR-10 (32x32), CelebA (64x64), and LSUN (128x128) datasets, as well as the option to use your own custom datasets.
 ```
-python train/train_image.py
+export PYTHONPATH=./
+python train/train_image.py --dataset=<dataset> --num_process_per_node=<num_gpus>
 ```
-Code for image datasets is still being prepared and not yet fully complete. However, you can still refer to the current implementation.
+
+## Pretrained Models
 
 ## Acknowledgements
 - [DDGAN](https://github.com/NVlabs/denoising-diffusion-gan)
