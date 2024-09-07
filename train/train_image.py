@@ -17,9 +17,11 @@ from data_process.lmdb_datasets import LMDBDataset
 import json
 import math
 import itertools
+from utils.utils import overwrite_opt,CropCelebA64
 from torch.multiprocessing import Process
 import torch.distributed as dist
 import shutil
+
 
 
 def copy_source(file, output_dir):
@@ -268,10 +270,10 @@ def train(rank, gpu, args):
             transforms.ToTensor(),
             transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))
         ])
-        dataset = LMDBDataset(root='./data/CelebA/celeba64_lmdb/', name='celeba64', \
+        dataset = LMDBDataset(root='./data/celeba64_lmdb/', name='celeba64', \
                             train=True, transform=train_transform,is_encoded=True)
 
-    elif args.dataset == 'lsun':
+    elif args.dataset == 'lsun128':
         train_transform = transforms.Compose([
         transforms.Resize(args.image_size),
         transforms.CenterCrop(args.image_size),
@@ -307,7 +309,7 @@ def train(rank, gpu, args):
         netE = Encoder_64(nc=2*args.num_channels, ngf=args.ngf, nz=args.nz,
                                    t_emb_dim=args.t_emb_dim,
                                    act=nn.LeakyReLU(0.2)).to(device)
-    elif args.dataset == 'lsun':
+    elif args.dataset == 'lsun128':
         netE = Encoder_large(nc=2*args.num_channels, ngf=args.ngf, nz=args.nz,
                                    t_emb_dim=args.t_emb_dim,
                                    act=nn.LeakyReLU(0.2)).to(device)
@@ -349,7 +351,8 @@ def train(rank, gpu, args):
 
     coeff = Diffusion_Coefficients(args, device)
     pos_coeff = Posterior_Coefficients(args, device)
-    
+    T = get_time_schedule(args, device)
+    weight = 0.6 * (T ** math.log(0.2 / 0.6, 0.5))
 
     if args.resume:
         checkpoint_file = os.path.join(args.resume_path, 'content.pth')
@@ -406,7 +409,7 @@ def train(rank, gpu, args):
             else:
                 errD = (-D_real_r + D_fake_r).mean()
             errD.backward()
-            #torch.nn.utils.clip_grad_norm_(netD.parameters(), 0.1)
+            #torch.nn.utils.clip_grad_norm_(netD.parameters(), 1)
             optimizerD.step()
 
             # update G
@@ -420,9 +423,14 @@ def train(rank, gpu, args):
             latent_z_gen, mean_gen, _, logvar_gen = netE(x_pos_sample, t, x_tp1)
             errLatent = 0.1 * torch.mean(diag_normal_NLL(latent_z, mean_gen, logvar_gen))
             latent_z_pos, mean, std, logvar = netE(x_t, t, x_tp1)
-            x_0_predict = netG(x_tp1, t, latent_z_pos)
-            logqxt_condition_tp1 = q_condition(pos_coeff, x_t, x_tp1, x_0_predict, t)
-            err_Recon = -logqxt_condition_tp1.mean()
+            x_0_predict_E = netG(x_tp1, t, latent_z_pos)
+            if args.dataset=='lsun128':
+                logqxt_condition_tp1 = q_condition(pos_coeff, x_t, x_tp1, x_0_predict_E, t)
+                err_Recon = -(logqxt_condition_tp1.squeeze()*weight[t+1].to(device)).mean()
+            else:
+                x_pos_mean = sample_posterior_mean(pos_coeff, x_0_predict, x_tp1, t)
+                err_Recon = mse_loss(x_t, x_pos_mean) / batch_size
+
             errKld = torch.mean(-0.5 * torch.sum(1 + logvar - mean ** 2 - logvar.exp(), dim=1), dim=0)
             errG = -E_F + errLatent + errKld + err_Recon
 
@@ -581,7 +589,7 @@ if __name__ == '__main__':
     # geenrator and training
     parser.add_argument('--exp', default='experiment_image', help='name of experiment')
     parser.add_argument('--resume_path', default='', help='name of experiment')
-    parser.add_argument('--dataset', default='cifar10', help='name of dataset')
+    parser.add_argument('--dataset', default='lsun128', help='name of dataset')
     parser.add_argument('--nz', type=int, default=100)
     parser.add_argument('--num_timesteps', type=int, default=4)
 
@@ -613,7 +621,7 @@ if __name__ == '__main__':
     ###ddp
     parser.add_argument('--num_proc_node', type=int, default=1,
                         help='The number of nodes in multi node env.')
-    parser.add_argument('--num_process_per_node', type=int, default=4,
+    parser.add_argument('--num_process_per_node', type=int, default=1,
                         help='number of gpus')
     parser.add_argument('--node_rank', type=int, default=0,
                         help='The index of node.')
@@ -623,7 +631,16 @@ if __name__ == '__main__':
                         help='address for master')
 
     args = parser.parse_args()
-    
+
+    if args.dataset == 'cifar10':
+        from config.cifar10 import cifar10_config
+        args = overwrite_opt(args, cifar10_config)
+    elif args.dataset == 'celeba64':
+        from config.celeba64 import celeba64_config
+        args = overwrite_opt(args, celeba64_config)
+    elif args.dataset == 'lsun128':
+        from config.lsun128 import lsun128_config
+        args = overwrite_opt(args, lsun128_config)
     args.world_size = args.num_proc_node * args.num_process_per_node
     size = args.num_process_per_node
     if is_debugging() == False:
